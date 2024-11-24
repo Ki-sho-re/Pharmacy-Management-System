@@ -1,0 +1,119 @@
+import datetime
+
+# Data storage
+medicine_list = []
+sales = []
+
+# Medicine class
+class Medicine:
+    def __init__(self, id, name, price, quantity):
+        self.id = id
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+
+# Add a new medicine
+def add_medicine():
+    print("\nAdd New Medicine")
+    id = input("Enter Medicine ID: ")
+    name = input("Enter Medicine Name: ")
+    price = float(input("Enter Price: "))
+    quantity = int(input("Enter Quantity: "))
+    medicine = Medicine(id, name, price, quantity)
+    medicine_list.append(medicine)
+    print(f"Medicine '{name}' added successfully!\n")
+
+# View all medicines
+def view_medicines():
+    print("\nAvailable Medicines")
+    if not medicine_list:
+        print("No medicines available.")
+        return
+    print(f"{'ID':<10}{'Name':<20}{'Price':<10}{'Quantity':<10}")
+    print("-" * 50)
+    for medicine in medicine_list:
+        print(f"{medicine.id:<10}{medicine.name:<20}{medicine.price:<10}{medicine.quantity:<10}")
+
+# Search for a medicine
+def search_medicine():
+    print("\nSearch Medicine")
+    name = input("Enter medicine name to search: ")
+    for medicine in medicine_list:
+        if medicine.name.lower() == name.lower():
+            print(f"\nMedicine Found: ID: {medicine.id}, Name: {medicine.name}, Price: {medicine.price}, Quantity: {medicine.quantity}")
+            return medicine
+    print("Medicine not found.")
+
+# Update stock
+def update_stock():
+    print("\nUpdate Medicine Stock")
+    medicine = search_medicine()
+    if medicine:
+        new_quantity = int(input("Enter new quantity to add: "))
+        medicine.quantity += new_quantity
+        print(f"Stock updated successfully! New Quantity: {medicine.quantity}")
+
+# Record a sale
+def record_sale():
+    print("\nRecord Sale")
+    medicine = search_medicine()
+    if medicine:
+        quantity = int(input("Enter quantity to sell: "))
+        if quantity <= medicine.quantity:
+            medicine.quantity -= quantity
+            total_price = quantity * medicine.price
+            sales.append({
+                "name": medicine.name,
+                "quantity": quantity,
+                "total_price": total_price,
+                "date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            })
+            print(f"Sale recorded successfully! Total Price: {total_price}")
+        else:
+            print("Insufficient stock.")
+
+# View sales report
+def view_sales_report():
+    print("\nSales Report")
+    if not sales:
+        print("No sales recorded.")
+        return
+    print(f"{'Date':<20}{'Medicine':<20}{'Quantity':<10}{'Total Price':<10}")
+    print("-" * 60)
+    for sale in sales:
+        print(f"{sale['date']:<20}{sale['name']:<20}{sale['quantity']:<10}{sale['total_price']:<10}")
+
+# Main menu
+def main_menu():
+    while True:
+        print("\nPharmacy Management System")
+        print("1. Add Medicine")
+        print("2. View Medicines")
+        print("3. Search Medicine")
+        print("4. Update Stock")
+        print("5. Record Sale")
+        print("6. View Sales Report")
+        print("7. Exit")
+        choice = input("Enter your choice: ")
+        
+        if choice == '1':
+            add_medicine()
+        elif choice == '2':
+            view_medicines()
+        elif choice == '3':
+            search_medicine()
+        elif choice == '4':
+            update_stock()
+        elif choice == '5':
+            record_sale()
+        elif choice == '6':
+            view_sales_report()
+        elif choice == '7':
+            print("Exiting... Goodbye!")
+            break
+        else:
+            print("Invalid choice! Please try again.")
+
+# Run the program
+if __name__ == "__main__":
+    main_menu()
